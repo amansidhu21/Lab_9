@@ -13,11 +13,6 @@ library(kableExtra)
 
 ## Neural networks (seeds data)
 
-* seeds data set from UCI repository^[[
-seeds Data Set](https://archive.ics.uci.edu/ml/datasets/seeds)]
-* Explore the data.
-  
-  * Measurements of geometrical properties of kernels belonging to three different varieties of wheat. A soft X-ray technique and GRAINS package were used to construct all seven, real-valued attributes.
 
 
 ```{r}
@@ -127,9 +122,6 @@ tab_seeds <- table(slice(
 ```
 
 ## Neural networks (Boston data (quantitative response))
-
-* Let's consider housing price data, _Boston_ in MASS package.
-* Response is quantitative. 
 
 ```{r}
 library(nnet)
@@ -294,11 +286,6 @@ plot(iris_nnet2)
 ```
 
 
-
-We can choose size  = `iris_nnet2$best.parameters[1,1]` and decay `iris_nnet2$best.parameters[1,2]`.
-
-
-Fit the model with size  = `iris_nnet2$best.parameters[1,1]` and decay = `iris_nnet2$best.parameters[1,2]`.
 
 ```{r}
 nn_iris_d_s <- nnet(
