@@ -20,7 +20,7 @@ seeds Data Set](https://archive.ics.uci.edu/ml/datasets/seeds)]
   * Measurements of geometrical properties of kernels belonging to three different varieties of wheat. A soft X-ray technique and GRAINS package were used to construct all seven, real-valued attributes.
 
 
-```{r seeds1, exercise = TRUE}
+```{r}
 seeds <- read.table(
   "https://archive.ics.uci.edu/ml/machine-learning-databases/00236/seeds_dataset.txt"
   )
@@ -41,7 +41,7 @@ cor(dplyr::select(seeds, -Class))
 
 * Print tidy seeds data set.
 
-```{r seeds2, exercise = TRUE, exercise.setup = c("seeds1")}
+```{r}
 dim(seeds)
 knitr::kable(head(seeds)) %>%
   kable_styling(latex_options="scale_down")
@@ -50,7 +50,7 @@ knitr::kable(head(seeds)) %>%
 
 * We scale the predictors.
 
-```{r seeds3, exercise = TRUE, exercise.setup = c("seeds1", "seeds2")}
+```{r}
 x <- seeds %>%
   dplyr::select(-Class) %>%
   scale()
@@ -59,7 +59,7 @@ x <- seeds %>%
 
 * We split 75\%/25\% training/test set. 
 
-```{r seeds4, exercise = TRUE, exercise.setup = c("seeds1", "seeds2", "seeds3")}
+```{r}
 set.seed(1)
 
 seeds_train_index <- seeds %>%
@@ -75,7 +75,7 @@ seeds_train_index <- seeds %>%
 
 * We create binary output units $y_{k}, k= 1, 2, 3$ using `class.ind()`.
 
-```{r seeds5, exercise = TRUE, exercise.setup = c("seeds1, seeds2", "seeds3", "seeds4")}
+```{r}
 library(nnet)
 class_labels <- pull(seeds, Class) %>% 
   class.ind() 
@@ -87,7 +87,7 @@ knitr::kable(head(class_labels)) %>%
 
 * Create predictor matrix for training/test set and output for training/test set.
 
-```{r seeds6, exercise = TRUE, exercise.setup = c("seeds1, seeds2", "seeds3", "seeds4", "seeds5")}
+```{r}
 seeds_train <- x[seeds_train_index, ]
 train_class <- class_labels[seeds_train_index,]
 seeds_test <- x[-seeds_train_index, ] 
@@ -99,7 +99,7 @@ test_class <- class_labels[-seeds_train_index,]
 
 * Let's tune `size` = number of units in the hidden layer and `decay` = weight decay parameter. 
 
-```{r seeds7, exercise = TRUE, exercise.setup = c("seeds1, seeds2", "seeds3", "seeds4", "seeds5", "seeds6")}
+```{r}
 nn_seeds <- nnet(
   x = seeds_train, 
   y = train_class, 
@@ -114,7 +114,7 @@ nn_seeds <- nnet(
 
 * Compute test error for NN with `size = 4` and `decay = 0`.
 
-```{r seeds8, exercise = TRUE, exercise.setup = c("seeds1, seeds2", "seeds3", "seeds4", "seeds5", "seeds6", "seeds7")}
+```{r}
 nn_pred <- predict(nn_seeds, seeds_test, 
                    type="class")
 
@@ -131,7 +131,7 @@ tab_seeds <- table(slice(
 * Let's consider housing price data, _Boston_ in MASS package.
 * Response is quantitative. 
 
-```{r Boston1, exercise = TRUE}
+```{r}
 library(nnet)
 library(MASS)
 ```
@@ -140,7 +140,7 @@ library(MASS)
 * We scale predictors and response.
 * We split training/test set.
 
-```{r Boston2, exercise = TRUE, exercise.setup = c("Boston1")}
+```{r}
 train_Boston <- sample(
   1:nrow(Boston), 
   nrow(Boston)/2
@@ -152,7 +152,7 @@ x <- scale(Boston)
 
 * Create predictor matrix for training/test set and output for training/test set.
 
-```{r Boston3, exercise = TRUE, exercise.setup = c("Boston1", "Boston2")}
+```{r}
 Boston_train <- x[train_Boston, ]
 train_medv <- x[train_Boston, "medv"]
 Boston_test <- x[-train_Boston, ] 
@@ -162,7 +162,7 @@ test_medv <- x[-train_Boston, "medv"]
 
 * Let's tune `size` = number of units in the hidden layer and `decay` = weight decay parameter. 
 
-```{r Boston4, exercise = TRUE, exercise.setup = c("Boston1", "Boston2", "Boston3")}
+```{r}
 nn_Boston <- nnet(
   Boston_train, 
   train_medv,  
@@ -177,7 +177,7 @@ nn_Boston <- nnet(
 
 Compute test error for the above model: NN with `size = 10` and `decay = 1`.
 
-```{r Boston5, exercise = TRUE, exercise.setup = c("Boston1", "Boston2", "Boston3", "Boston4")}
+```{r}
 nn_pred <- predict(
   nn_Boston, 
   Boston_test,
@@ -186,7 +186,7 @@ nn_pred <- predict(
 ```
 
 
-```{r Boston6, exercise = TRUE, exercise.setup = c("Boston1", "Boston2", "Boston3", "Boston4", "Boston5")}
+```{r}
 plot(test_medv, nn_pred)
 
 mean((test_medv - nn_pred)^2)
@@ -199,7 +199,7 @@ mean((test_medv - nn_pred)^2)
 
 ### Let's vary the size of hidden layer- Iris data 
 
-```{r i-cv1, exercise = TRUE}
+```{r}
 library(e1071)
 library(cluster)
 set.seed(1)
@@ -245,7 +245,7 @@ Model selection - size  = `iris_nnet1$best.parameters[1,1]` with relatively smal
 
 Fit the model with size  = `iris_nnet1$best.parameters[1,1]`.
 
-```{r i-cv2, exercise = TRUE, exercise.setup = c("i-cv1")}
+```{r}
 library(nnet)
 nn_iris <- nnet(
   x = dplyr::select(iris_train, -Species),
@@ -259,7 +259,7 @@ nn_iris <- nnet(
 
 Compute test error for the selected model with size = `iris_nnet1$best.parameters[1,1]`
 
-```{r i-cv3, exercise = TRUE, exercise.setup = c("i-cv1", "i-cv2")}
+```{r}
 nn_pred <- predict(
   nn_iris, 
   dplyr::select(iris_test, -Species), 
@@ -277,7 +277,7 @@ tab
 
 ### Let's tune decay and size - Iris data 
 
-```{r i-cv4, exercise = TRUE, exercise.setup = c("i-cv1", "i-cv2", "i-cv3")}
+```{r}
 set.seed(1)
 
 iris_nnet2 <- tune.nnet(
@@ -300,7 +300,7 @@ We can choose size  = `iris_nnet2$best.parameters[1,1]` and decay `iris_nnet2$be
 
 Fit the model with size  = `iris_nnet2$best.parameters[1,1]` and decay = `iris_nnet2$best.parameters[1,2]`.
 
-```{r i-cv5, exercise = TRUE, exercise.setup = c("i-cv1", "i-cv2", "i-cv3", "i-cv4")}
+```{r}
 nn_iris_d_s <- nnet(
   x = dplyr::select(iris_train, -Species),
   y = class_labels[iris_train_index, ], 
@@ -338,7 +338,7 @@ Coffee - from the help page - data on the chemical composition of coffee samples
 
 * Let's apply k-means for clustering.
 
-```{r c-1, exercise = TRUE}
+```{r}
 library(cluster) 
 library(factoextra) # PCA
 library(pgmm) # coffee data
@@ -372,7 +372,7 @@ ggplot(tibble(K = K, wcss = wcss), aes(x = K, y = wcss)) +
 
 Based on the elbow method, we can use $k=2$. There are `dim(x_scaled)[2]` variables. So we need to use dimensionality reduction technique and then plot the clusters in two-dimensions.
 
-```{r c-2, exercise = TRUE, exercise.setup = c("c-1")}
+```{r}
 kmeans_coffee <- kmeans(x_scaled, 2)
 fvPCA <- fviz_cluster(kmeans_coffee, 
                     x_scaled, 
@@ -386,7 +386,7 @@ fvPCA
   * Silhouette measures how similar observations are within clusters.
   * Large average silhouette width indicates an appropriate number of clusters.
   
-```{r c-3, exercise = TRUE, exercise.setup = c("c-1", "c-2")}
+```{r}
 si <- silhouette(kmeans_coffee$cluster, dist(x_scaled))
 head(si)
 #average Silhouette width
@@ -423,7 +423,7 @@ Based on the average Silhouette width, we can use $k=2$.
 
 * Let's apply k-medoid clustering - coffee data
 
-```{r c-4, exercise = TRUE, exercise.setup = c("c-1", "c-2", "c-3")}
+```{r}
 kmedoid_coffee <- pam(x_scaled, 2)
 kmedoid_coffee$silinfo$avg.width
 
@@ -443,9 +443,6 @@ ggplot(tibble(K = 2:8, avgSil = avgSil), aes(x = K, y = avgSil)) +
 
 For k-medoid for clustering, based on the average Silhouette width, we can use $K=2$.
 
-* We can also use Gap statistic to choose $k$ - Reference [**Modern Statistics for Modern Biologists**](https://web.stanford.edu/class/bios221/book/Chap-Clustering.html) Chapter 5.7.1.
-
-
 
 ## Clustering - votes data
 
@@ -454,10 +451,11 @@ For k-medoid for clustering, based on the average Silhouette width, we can use $
 
 ### k-means
 
-```{r eval=FALSE}
+```{r}
 data(votes.repub) # from cluster package
 votes.repub_scaled <- scale(votes.repub)
 votes.repub_kmeans <- kmeans(votes.repub_scaled, 2)
 ```
 
 Why kmean() doesn't work?
+K-Means clustering algorithm fails to give good results when the data contains outliers, the density spread of data points across the data space is different and the data points follow non-convex shapes.
